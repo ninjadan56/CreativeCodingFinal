@@ -1,35 +1,82 @@
-let circleSize =15;
+//source for mapping
+//Dan Schiffman Earthquake data mapping Video: https://youtu.be/ZiYdOwOrGyc
+
+//https://docs.mapbox.com/mapbox.js/api/v3.2.1/ map box api
+//https://www.youtube.com/watch?v=mj8_w11MvH8&list=PLRqwX-V7Uu6a-SQiI4RtIwuOrLJGnel0r&index=10 api use
+//usgs data csv
+
+var mapimg;
+
+var clat = 0; //40.673
+var clon = 0; //-73.997
+
+var ww = 1024;
+var hh = 512;
+
+var zoom = 1; //13
+var earthquake;
+
+function preload() {
+  // Latitude, longitude, windowwidth/height, and zoom specified to api.
+  mapimg = loadImage('https://api.mapbox.com/styles/v1/mapbox/dark-v9/static/' +
+    clon + ',' + clat + ',' + zoom + '/' +
+    ww + 'x' + hh +
+    '?access_token=pk.eyJ1IjoibmluamFkYW41NiIsImEiOiJjazNlcmhheGYwMWF3M25ud203dGM0ODBtIn0.L-zgNQ_A2akKSxvUR9f8Ug');
+  // earthquakes = loadStrings('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.csv');
+  earthquakes = loadStrings('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv');
+}
+
+function mercX(lon) {
+  lon = radians(lon);
+  var a = (256 / PI) * pow(2, zoom);
+  var b = lon + PI;
+  return a * b;
+}
+
+function mercY(lat) {
+  lat = radians(lat);
+  var a = (256 / PI) * pow(2, zoom);
+  var b = tan(PI / 4 + lat / 2);
+  var c = PI - log(b);
+  return a * c;
+}
+
 
 function setup() {
-	createCanvas(500, 500);
-}
+  createCanvas(ww, hh);
+  translate(width / 2, height / 2);
+  imageMode(CENTER);
+  image(mapimg, 0, 0);
 
-function draw() {
-	niceGlitch();
-	fill(162,178,255);
-	rect(200, 200, 300, 300);
+  var cx = mercX(clon);
+  var cy = mercY(clat);
 
-	xLoc = map(mouseX, 0, windowWidth, 210, 490);
-	yLoc = map(mouseY, 0, windowHeight, 210, 490);
-
-	fill(255, 130, 150);
-	ellipse(xLoc, yLoc, circleSize, circleSize);
-
-
-}
-
-function keyPressed(){
-		if (keyisPressed == 'w'){
-		background(random(50,255), random(50,255), random(50,255));
-	}
-}
-
-function niceGlitch(){
-  for(let x = 0; x < windowWidth; x++){
-    for(let y = 0; y < windowHeight; y++){
-       let c = color(map(x,0,windowWidth, 0, 255),map(y,0, windowHeight,0, 255),map((x+y)*.5,0, windowHeight,0, 255));
-       set(x,y,c);
-       updatePixels();
+  for (var i = 1; i < earthquakes.length; i++) {
+    var data = earthquakes[i].split(/,/);
+    //console.log(data);
+    var lat = data[1];
+    var lon = data[2];
+    var mag = data[4];
+    var x = mercX(lon) - cx;
+    var y = mercY(lat) - cy;
+    // This addition fixes the case where the longitude is non-zero and
+    // points can go off the screen.
+    if(x < - width/2) {
+      x += width;
+    } else if(x > width / 2) {
+      x -= width;
     }
-	}
+    mag = pow(10, mag);
+    mag = sqrt(mag);
+    var magmax = sqrt(pow(10, 10));
+    var d = map(mag, 0, magmax, 0, 180);
+    stroke(255, 0, 255);
+    fill(255, 0, 255, 200);
+    ellipse(x, y, d, d);
+  }
+
 }
+
+/* function mousePressed(){
+
+}*/
