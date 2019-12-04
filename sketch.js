@@ -7,13 +7,13 @@
 
 var mapimg;
 
-var clat = 0; //40.673
-var clon = 0; //-73.997
+var clat = 40.673; //40.673
+var clon = -73.997; //-73.997
 
 var ww = 1024;
 var hh = 512;
 
-var zoom = 1; //13
+var zoom = 13; //13
 var earthquake;
 
 function preload() {
