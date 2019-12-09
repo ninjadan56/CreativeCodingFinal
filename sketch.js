@@ -23,7 +23,7 @@ let hh = 512;
 
 let xx = 600;
 let yy = 100; // position of first circle.
-let rad = 25; //radius of circles.
+let rad = 25; //radius of first circle.
 let s = 400; //side of rect.
 
 let pollutants;
@@ -102,7 +102,7 @@ class Circle {
       fill(255);
       textSize(20);
       textAlign(CENTER);
-      text('Average Lead Content is 533 mg/kg. Total Concentration is 4220 mg/kg. 6 inches below the surface, Total Concentration is 2880 mg/kg.', ww/2+100, hh/2+70, s, s);
+      text('Average Lead Concentration is 533 mg/kg. Total is 4220 mg/kg. 6 inches below the surface, Total Concentration is 2880 mg/kg.', ww/2+100, hh/2+70, s, s);
       text('press spacebar to exit popup', ww/2+100, hh/2+170);
       image(p1, 480, 200, 250, 200);
     }
@@ -115,8 +115,8 @@ class Circle {
       textSize(20);
       textAlign(CENTER);
       text('Average Arsenic Content is 12.1 mg/kg. Total Concentration is 44.7 mg/kg.', ww/2-100, hh/2+70, s, s);
-      text('press spacebar to exit popup or k to go through pictures', ww/2-100, hh/2+170);
-      image(p2, 300, 200, 250, 200);
+      text('press spacebar to exit popup or k to go through pictures', ww/2-100, hh/2+330, s, s);
+      image(p2, 300, 170, 250, 200);
     }
     if (d3 < rad){
       noStroke();
@@ -151,6 +151,6 @@ function mousePressed(){
 function moreDots(){
   stroke(255, 0, 255);
   fill(255, 0, 255, 200);
-  ellipse(400, 300, rad, rad);
-  ellipse(520, 230, rad, rad);
+  ellipse(400, 300, random(25,50), random(25,50));
+  ellipse(520, 230, random(25,50), random(25,50));
 }
