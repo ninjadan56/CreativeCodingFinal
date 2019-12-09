@@ -5,78 +5,152 @@
 //https://www.youtube.com/watch?v=mj8_w11MvH8&list=PLRqwX-V7Uu6a-SQiI4RtIwuOrLJGnel0r&index=10 api use
 //usgs data csv
 
-var mapimg;
+let back;
+let p1;
+let p2;// variables for the pictures.
+let p3;
 
-var clat = 40.673; //40.673
-var clon = -73.997; //-73.997
+let frame = 0;
+let numFrames = 3;
+let images = [numFrames];
 
-var ww = 1024;
-var hh = 512;
 
-var zoom = 13; //13
-var earthquake;
+let clat = 40.675; //40.673
+let clon = -73.992; //-73.997
 
-function preload() {
-  // Latitude, longitude, windowwidth/height, and zoom specified to api.
-  mapimg = loadImage('https://api.mapbox.com/styles/v1/mapbox/dark-v9/static/' +
-    clon + ',' + clat + ',' + zoom + '/' +
-    ww + 'x' + hh +
-    '?access_token=pk.eyJ1IjoibmluamFkYW41NiIsImEiOiJjazNlcmhheGYwMWF3M25ud203dGM0ODBtIn0.L-zgNQ_A2akKSxvUR9f8Ug');
-  // earthquakes = loadStrings('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.csv');
-  earthquakes = loadStrings('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv');
+let ww = 1024; //height and width of canvas.
+let hh = 512;
+
+let xx = 600;
+let yy = 100; // position of first circle.
+let rad = 25; //radius of circles.
+let s = 400; //side of rect.
+
+let pollutants;
+let circles = []; //just in case I wanted more circle in class than hardcoding th rest
+
+function preload() { //preload all images and files so that its there ready to use.
+  back = loadImage('assets/map.PNG');
+  p1 = loadImage('assets/p1.jpg');
+  p2 = loadImage('assets/p2.PNG');
+  p3 = loadImage('assets/p3.PNG');
+  // pollutants = loadStrings('csv.csv');
+  images[0] = loadImage('assets/p4.jpg');
+  images[1] = loadImage('assets/p5.jpg');
+  images[2] = loadImage('assets/p6.jpg');
 }
-
-function mercX(lon) {
-  lon = radians(lon);
-  var a = (256 / PI) * pow(2, zoom);
-  var b = lon + PI;
-  return a * b;
-}
-
-function mercY(lat) {
-  lat = radians(lat);
-  var a = (256 / PI) * pow(2, zoom);
-  var b = tan(PI / 4 + lat / 2);
-  var c = PI - log(b);
-  return a * c;
-}
-
 
 function setup() {
   createCanvas(ww, hh);
-  translate(width / 2, height / 2);
-  imageMode(CENTER);
-  image(mapimg, 0, 0);
+  background(back);
+  fill(255);
+  text('GOWANUS CANAL', ww/2-50, 20)
+  moreDots();
+  for (let i = 0; i < 6; i++) {
+  let x = xx;
+  let y = yy;
+  let r = rad;
+  let b = new Circle(x, y, r);
+  circles.push(b);
+}
+}
 
-  var cx = mercX(clon);
-  var cy = mercY(clat);
+function draw(){
+  // background(back);
 
-  for (var i = 1; i < earthquakes.length; i++) {
-    var data = earthquakes[i].split(/,/);
-    //console.log(data);
-    var lat = data[1];
-    var lon = data[2];
-    var mag = data[4];
-    var x = mercX(lon) - cx;
-    var y = mercY(lat) - cy;
-    // This addition fixes the case where the longitude is non-zero and
-    // points can go off the screen.
-    if(x < - width/2) {
-      x += width;
-    } else if(x > width / 2) {
-      x -= width;
-    }
-    mag = pow(10, mag);
-    mag = sqrt(mag);
-    var magmax = sqrt(pow(10, 10));
-    var d = map(mag, 0, magmax, 0, 180);
-    stroke(255, 0, 255);
-    fill(255, 0, 255, 200);
-    ellipse(x, y, d, d);
+  for (let i = 0; i < circles.length; i++) {
+    circles[i].show();
   }
+  // if (keyIsPressed === true) {
+  //   setup();
+  // }
+
 
 }
 
-/* function mousePressed(){
+function keyPressed(){
+  if (keyCode === 32){
+    setup();
+  }
+  if (keyCode === 75){
+    frame = (frame) % numFrames;  // Use % to cycle through frames
+    image(images[frame], 0, 0, ww, 512);
+    if (frame<numFrames){
+    frame++;
+    }
+    else frame = 0;
+  }
+}
 
-}*/
+
+class Circle {
+  constructor(x,y,r){
+    this.x = x;
+    this.y = y;
+    this.r = r;
+  }
+
+  clicked(px,py){ //clicked function for class to see if mouse presses within circle.
+    let d1 = dist(px, py, 600, 100);
+    let d2 = dist(px, py, 400, 300);
+    let d3 = dist(px, py, 520, 230);
+    if (d1 < rad){
+      noStroke();
+      fill(105);
+      rectMode(CENTER);
+      rect(ww/2+100, hh/2, s, s);
+      fill(255);
+      textSize(20);
+      textAlign(CENTER);
+      text('Average Lead Content is 533 mg/kg. Total Concentration is 4220 mg/kg. 6 inches below the surface, Total Concentration is 2880 mg/kg.', ww/2+100, hh/2+70, s, s);
+      text('press spacebar to exit popup', ww/2+100, hh/2+170);
+      image(p1, 480, 200, 250, 200);
+    }
+    if (d2 < rad){
+      noStroke();
+      fill(105);
+      rectMode(CENTER);
+      rect(ww/2-100, hh/2, s, s);
+      fill(255);
+      textSize(20);
+      textAlign(CENTER);
+      text('Average Arsenic Content is 12.1 mg/kg. Total Concentration is 44.7 mg/kg.', ww/2-100, hh/2+70, s, s);
+      text('press spacebar to exit popup or k to go through pictures', ww/2-100, hh/2+170);
+      image(p2, 300, 200, 250, 200);
+    }
+    if (d3 < rad){
+      noStroke();
+      fill(105);
+      rectMode(CENTER);
+      rect(ww/2-20, hh/2, s, s);
+      fill(255);
+      textSize(20);
+      textAlign(CENTER);
+      text('Blue Crabs living in the the New York Harbour have a concentration of PCBs of 67-127µg/kg. While Blue Crabs in the Canal have a concentration of 133-194 µg/kg.', ww/2-20, hh/2+70, s, s); //PCBs are highly toxic industrial compounds
+      text('press spacebar to exit popup', ww/2-20, hh/2+170);
+      image(p3, 380, 230, 230, 180);
+    }
+  }
+
+  show(){
+    stroke(255, 0, 255);
+    fill(255, 0, 255, 200);
+    ellipse(this.x, this.y, this.r, this.r);
+  }
+}
+
+
+function mousePressed(){
+  for (i = 0; i < circles.length; i++){
+    circles[i].clicked(mouseX,mouseY)
+  }
+}
+
+
+//Hard coded more Dots in becuase I couldn't figure out how to make a class that would place the circles exactly where I want them to.
+function moreDots(){
+  stroke(255, 0, 255);
+  fill(255, 0, 255, 200);
+  ellipse(400, 300, rad, rad);
+  ellipse(520, 230, rad, rad);
+}
