@@ -42,9 +42,9 @@ function preload() { //preload all images and files so that its there ready to u
 
 function setup() {
   createCanvas(ww, hh);
-  background(back);
+  background(back); //background is the map photo
   fill(255);
-  text('GOWANUS CANAL', ww/2-50, 20)
+  text('GOWANUS CANAL', ww/2-50, 20) //title of webpage?
   moreDots();
   for (let i = 0; i < 6; i++) {
   let x = xx;
@@ -59,7 +59,7 @@ function draw(){
   // background(back);
 
   for (let i = 0; i < circles.length; i++) {
-    circles[i].show();
+    circles[i].show(); //show the first circle.
   }
   // if (keyIsPressed === true) {
   //   setup();
@@ -69,11 +69,11 @@ function draw(){
 }
 
 function keyPressed(){
-  if (keyCode === 32){
+  if (keyCode === 32){ //when you press spacebar then it reloads page
     setup();
   }
   if (keyCode === 75){
-    frame = (frame) % numFrames;  // Use % to cycle through frames
+    frame = (frame) % numFrames;  //cycles through photos when you press K
     image(images[frame], 0, 0, ww, 512);
     if (frame<numFrames){
     frame++;
@@ -94,7 +94,7 @@ class Circle {
     let d1 = dist(px, py, 600, 100);
     let d2 = dist(px, py, 400, 300);
     let d3 = dist(px, py, 520, 230);
-    if (d1 < rad){
+    if (d1 < rad){ //if the distance between mouse position clicked and circle centers are less than readius than carry out code.
       noStroke();
       fill(105);
       rectMode(CENTER);
@@ -142,12 +142,12 @@ class Circle {
 
 function mousePressed(){
   for (i = 0; i < circles.length; i++){
-    circles[i].clicked(mouseX,mouseY)
+    circles[i].clicked(mouseX,mouseY) //pushes mouseX and mouseY to variables px and py
   }
 }
 
 
-//Hard coded more Dots in becuase I couldn't figure out how to make a class that would place the circles exactly where I want them to.
+//Hard coded more circles in becuase I couldn't figure out how to make a class that would place the circles exactly where I want them to.
 function moreDots(){
   stroke(255, 0, 255);
   fill(255, 0, 255, 200);
