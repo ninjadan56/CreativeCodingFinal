@@ -3,7 +3,7 @@
 
 //https://docs.mapbox.com/mapbox.js/api/v3.2.1/ map box api
 //https://www.youtube.com/watch?v=mj8_w11MvH8&list=PLRqwX-V7Uu6a-SQiI4RtIwuOrLJGnel0r&index=10 api use
-//usgs data csv
+//DATA IS FROM https://www.fws.gov/northeast/nyfo/ec/files/Gowanus%20PAS%20Final-Signed.pdf
 
 let back;
 let p1;
